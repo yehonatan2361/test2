@@ -117,8 +117,9 @@ async def select_5():
     return list_all_coordinates_and_entity_id
 
 
-
-
+@app.get("/select_6_5")
+async def select_6_5():
+    return my_data.select_6_5()
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

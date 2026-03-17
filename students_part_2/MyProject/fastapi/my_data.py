@@ -14,23 +14,21 @@ logger = logging.getLogger(__name__)
 def connection_data_base():
     try:
         mydb = mysql.connector.connect(
-            host = "mysql",
-            user = "root",
-            password = "root",
-            database = "digital_hunter"
+            host="mysql",
+            user="root",
+            password="root",
+            database="digital_hunter"
         )
         return mydb
     except Exception as e:
         logger.info(e)
         return -1
 
+
 mydb = connection_data_base()
 if mydb == -1:
     logger.info("I'm sorry but there is no data base")
     Exception("I'm sorry but there is no data base")
-
-
-
 
 
 def show_all_table():
@@ -46,12 +44,12 @@ def select_all_attacks():
     result = my_table.fetchall()
     return result
 
+
 def show_all_attacks():
     my_table = mydb.cursor()
     my_table.execute("SHOW COLUMNS FROM attacks;")
     result = my_table.fetchall()
     return result
-
 
 
 def select_all_damage_assessments():
@@ -60,13 +58,12 @@ def select_all_damage_assessments():
     result = my_table.fetchall()
     return result
 
+
 def show_all_damage_assessments():
     my_table = mydb.cursor()
     my_table.execute("SHOW COLUMNS FROM damage_assessments;")
     result = my_table.fetchall()
     return result
-
-
 
 
 def select_all_targets():
@@ -75,13 +72,12 @@ def select_all_targets():
     result = my_table.fetchall()
     return result
 
+
 def show_all_targets():
     my_table = mydb.cursor()
     my_table.execute("SHOW COLUMNS FROM targets;")
     result = my_table.fetchall()
     return result
-
-
 
 
 def select_all_intel_signals():
@@ -90,12 +86,12 @@ def select_all_intel_signals():
     result = my_table.fetchall()
     return result
 
+
 def show_all_intel_signals():
     my_table = mydb.cursor()
     my_table.execute("SHOW COLUMNS FROM intel_signals;")
     result = my_table.fetchall()
     return result
-
 
 
 def select_1():
@@ -139,6 +135,7 @@ def return_list_entity_id():
     result = my_table.fetchall()
     return result
 
+
 def select_5(entity_id):
     my_table = mydb.cursor()
     my_table.execute("SELECT entity_id, reported_lat, reported_lon FROM\
@@ -150,7 +147,7 @@ def select_5(entity_id):
             coordinates_and_entity_id_in_result = result[index]
             entity_id_in_result = coordinates_and_entity_id_in_result[0]
             if entity_id_in_result == entity_id:
-                coordinates = (coordinates_and_entity_id_in_result[1],coordinates_and_entity_id_in_result[2])
+                coordinates = (coordinates_and_entity_id_in_result[1], coordinates_and_entity_id_in_result[2])
                 logger.info(coordinates)
                 list_coordinates_entity_id.append(coordinates)
         logger.info(list_coordinates_entity_id)
@@ -160,5 +157,29 @@ def select_5(entity_id):
     return list_coordinates_entity_id
 
 
-
-
+def select_6_5():
+    my_table = mydb.cursor()
+    my_table.execute("SELECT entity_id, reported_lat, reported_lon FROM\
+         intel_signals ORDER BY entity_id;")
+    result = my_table.fetchall()
+    list_coordinates_entity_id = []
+    list_all = []
+    list_entity_id = []
+    entity_id = result[0][0]
+    for index in range(len(result)):
+        coordinates_and_entity_id_in_result = result[index]
+        entity_id_in_result = coordinates_and_entity_id_in_result[0]
+        if entity_id_in_result == entity_id:
+            coordinates = (coordinates_and_entity_id_in_result[1], coordinates_and_entity_id_in_result[2])
+            list_coordinates_entity_id.append(coordinates)
+            continue
+        else:
+            list_all.append(entity_id)
+            list_all.append(list_coordinates_entity_id)
+            list_coordinates_entity_id = []
+            list_entity_id.append(list_all)
+            list_all = []
+            entity_id = entity_id_in_result
+            coordinates = (coordinates_and_entity_id_in_result[1], coordinates_and_entity_id_in_result[2])
+            list_coordinates_entity_id.append(coordinates)
+    return list_entity_id
